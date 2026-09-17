@@ -1,21 +1,17 @@
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import HowItWorks from "./components/HowItWorks";
-import WhatWeSource from "./components/WhatWeSource";
-import ServicePricing from "./components/ServicePricing";
-import FAQ from "./components/Faq";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import RequestPage from "./pages/RequestPage";
+
 import "./index.css";
 
 function App() {
   return (
-    <>
-      <Navbar />
-      <Hero />
-      <HowItWorks />
-      <WhatWeSource />
-      <ServicePricing />
-      <FAQ />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/request" element={<RequestPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

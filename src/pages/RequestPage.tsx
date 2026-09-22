@@ -2,6 +2,7 @@ import { useState } from "react";
 import ShoppingList from "../components/request/ShoppingList";
 import CustomerDetails from "../components/request/CustomerDetails";
 import RequestReview from "../components/request/RequestReview";
+import RequestSuccess from "../components/request/RequestSuccess";
 
 export type ShoppingItem = {
   id: number;
@@ -23,6 +24,9 @@ export type CustomerDetailsData = {
 
 const RequestPage = () => {
   const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [referenceNumber, setReferenceNumber] = useState("");
 
   const [items, setItems] = useState<ShoppingItem[]>([
     {
@@ -43,6 +47,94 @@ const RequestPage = () => {
     city: "",
     address: "",
   });
+
+  const isItemsValid = () => {
+    return items.every((item) => item.name.trim() !== "");
+  };
+
+  const isCustomerDetailsValid = () => {
+    return (
+      customerDetails.fullName.trim() !== "" &&
+      customerDetails.email.trim() !== "" &&
+      customerDetails.phone.trim() !== "" &&
+      customerDetails.country.trim() !== "" &&
+      customerDetails.city.trim() !== "" &&
+      customerDetails.address.trim() !== ""
+    );
+  };
+
+  const handleContinueToDetails = () => {
+    if (!isItemsValid()) {
+      alert("Please enter a name for every item before continuing.");
+      return;
+    }
+
+    setStep(2);
+  };
+
+  const handleContinueToReview = () => {
+    if (!isCustomerDetailsValid()) {
+      alert("Please complete all required details before continuing.");
+      return;
+    }
+
+    setStep(3);
+  };
+
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
+    // Temporary frontend-only submission.
+    // This will be replaced with the real backend request later.
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+
+    const temporaryReference = `REQ-${Date.now().toString().slice(-6)}`;
+
+    setReferenceNumber(temporaryReference);
+    setSubmitted(true);
+    setIsSubmitting(false);
+  };
+
+  const handleStartNewRequest = () => {
+    setItems([
+      {
+        id: 1,
+        name: "",
+        quantity: 1,
+        description: "",
+        budget: "",
+        image: null,
+      },
+    ]);
+
+    setCustomerDetails({
+      fullName: "",
+      email: "",
+      phone: "",
+      country: "",
+      city: "",
+      address: "",
+    });
+
+    setReferenceNumber("");
+    setSubmitted(false);
+    setStep(1);
+  };
+
+  if (submitted) {
+    return (
+      <main className="min-h-screen bg-gray-50">
+        <div className="mx-auto max-w-5xl px-6 py-12 sm:py-16 lg:px-8 lg:py-20">
+          <RequestSuccess
+            referenceNumber={referenceNumber}
+            onStartNewRequest={handleStartNewRequest}
+          />
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -107,7 +199,7 @@ const RequestPage = () => {
 
             <button
               type="button"
-              onClick={() => setStep(2)}
+              onClick={handleContinueToDetails}
               className="mt-8 w-full rounded-2xl bg-gray-950 px-6 py-4 text-sm font-semibold text-white transition hover:bg-gray-800"
             >
               Continue to details →
@@ -134,7 +226,7 @@ const RequestPage = () => {
 
               <button
                 type="button"
-                onClick={() => setStep(3)}
+                onClick={handleContinueToReview}
                 className="flex-1 rounded-2xl bg-gray-950 px-6 py-4 text-sm font-semibold text-white transition hover:bg-gray-800"
               >
                 Continue to review →
@@ -152,16 +244,19 @@ const RequestPage = () => {
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="flex-1 rounded-2xl border border-gray-300 bg-white px-6 py-4 text-sm font-semibold text-gray-700 transition hover:border-gray-500"
+                disabled={isSubmitting}
+                className="flex-1 rounded-2xl border border-gray-300 bg-white px-6 py-4 text-sm font-semibold text-gray-700 transition hover:border-gray-500 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 ← Back
               </button>
 
               <button
                 type="button"
-                className="flex-1 rounded-2xl bg-gray-950 px-6 py-4 text-sm font-semibold text-white transition hover:bg-gray-800"
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                className="flex-1 rounded-2xl bg-gray-950 px-6 py-4 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-70"
               >
-                Submit request
+                {isSubmitting ? "Submitting request..." : "Submit request"}
               </button>
             </div>
           </div>

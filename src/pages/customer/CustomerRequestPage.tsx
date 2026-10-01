@@ -3,8 +3,6 @@ import { useParams } from "react-router-dom";
 const CustomerRequestPage = () => {
   const { requestId } = useParams();
 
-  // Temporary frontend data.
-  // This will later come from the backend using requestId.
   const request = {
     id: requestId || "REQ-482731",
     customerName: "Jane Smith",
@@ -29,7 +27,6 @@ const CustomerRequestPage = () => {
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-6xl px-6 py-10 sm:py-14 lg:px-8">
-        {/* Back */}
         <a
           href="/"
           className="text-sm font-medium text-gray-500 transition hover:text-gray-950"
@@ -37,7 +34,6 @@ const CustomerRequestPage = () => {
           ← Back
         </a>
 
-        {/* Header */}
         <div className="mt-10 flex flex-col gap-6 border-b border-gray-200 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-medium uppercase tracking-[0.16em] text-gray-400">
@@ -58,11 +54,8 @@ const CustomerRequestPage = () => {
           </div>
         </div>
 
-        {/* Main content */}
         <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_340px]">
-          {/* Left */}
           <div className="space-y-8">
-            {/* Progress */}
             <section className="rounded-3xl border border-gray-200 bg-white p-6 sm:p-8">
               <div>
                 <p className="text-sm font-medium text-gray-400">
@@ -87,7 +80,7 @@ const CustomerRequestPage = () => {
                     >
                       {index < stages.length - 1 && (
                         <div
-                          className={`absolute left-[15px] top-8 h-full w-px ${
+                          className={`absolute left-3.75 top-8 h-full w-px ${
                             isComplete ? "bg-gray-950" : "bg-gray-200"
                           }`}
                         />
